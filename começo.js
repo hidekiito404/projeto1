@@ -92,3 +92,16 @@ const PORT = 5000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
+// Exemplo de array com os estados das imagens (0 a 6 erros)
+const imagensForca = [
+    "https://upload.wikimedia.org/wikipedia/commons/8/8a/Hangman-0.png",
+    "https://upload.wikimedia.org/wikipedia/commons/8/8b/Hangman-1.png",
+    "https://upload.wikimedia.org/wikipedia/commons/3/30/Hangman-2.png",
+    "https://upload.wikimedia.org/wikipedia/commons/7/70/Hangman-3.png",
+    "https://upload.wikimedia.org/wikipedia/commons/9/97/Hangman-4.png",
+    "https://upload.wikimedia.org/wikipedia/commons/2/27/Hangman-5.png",
+    "https://upload.wikimedia.org/wikipedia/commons/d/d6/Hangman-6.png"
+];
+
+// Dentro da sua função de erro, atualize a imagem assim:
+// document.getElementById("forca-imagem").src = imagensForca[errosAtuais];

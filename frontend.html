@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Forca - Epic Edition</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts para uma tipografia moderna de jogo -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>JOGO DA FORCA</h1>
+            <div id="status-jogo">
+                Erros: <span id="erros">0</span> / <span id="max-erros">6</span>
+            </div>
+        </header>
+
+        <!-- Área visual do boneco da forca com imagens progressivas -->
+        <div class="forca-container">
+            <img id="forca-imagem" src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Hangman-0.png" alt="Status da Forca">
+        </div>
+        
+        <!-- Espaço da palavra secreta -->
+        <div id="palavra-container">_ _ _ _ _</div>
+
+        <!-- Mensagem de Vitória ou Derrota -->
+        <div id="mensagem-fim"></div>
+
+        <!-- Teclado Virtual dinâmico -->
+        <div id="teclado"></div>
+
+        <!-- Botão de Reiniciar -->
+        <button id="reiniciar" style="display:none;" onclick="reiniciarJogo()">Jogar Novamente</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
