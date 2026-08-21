@@ -4,9 +4,139 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jogo da Forca - Epic Edition</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- Google Fonts para uma tipografia moderna de jogo -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: #1e293b;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #38bdf8;
+            margin-bottom: 8px;
+        }
+
+        #status-jogo {
+            font-size: 0.95rem;
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+
+        .forca-container svg {
+            stroke: #38bdf8;
+            stroke-width: 4;
+            stroke-linecap: round;
+            fill: none;
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        .boneco-parte {
+            stroke: #ef4444;
+            display: none;
+        }
+
+        #palavra-container {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: 12px;
+            margin: 20px 0;
+            color: #f1f5f9;
+            min-height: 50px;
+        }
+
+        #mensagem-fim {
+            font-size: 1.2rem;
+            font-weight: 700;
+            min-height: 30px;
+            color: #38bdf8;
+            margin-bottom: 10px;
+        }
+
+        #letras-usadas-container {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+
+        #teclado {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        #teclado button {
+            background: #334155;
+            color: #f8fafc;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        #teclado button:hover:not(:disabled) {
+            background: #38bdf8;
+            color: #0f172a;
+        }
+
+        #teclado button:disabled {
+            background: #1e293b;
+            color: #475569;
+            cursor: not-allowed;
+            border: 1px solid #334155;
+        }
+
+        #reiniciar {
+            background: #22c55e;
+            color: #0f172a;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        #reiniciar:hover {
+            background: #16a34a;
+            transform: scale(1.05);
+        }
+    </style>
 </head>
 <body>
 
@@ -18,24 +148,144 @@
             </div>
         </header>
 
-        <!-- Área visual do boneco da forca com imagens progressivas -->
         <div class="forca-container">
-            <img id="forca-imagem" src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Hangman-0.png" alt="Status da Forca">
+            <svg width="160" height="160" viewBox="0 0 160 160">
+                <line x1="20" y1="150" x2="140" y2="150" />
+                <line x1="40" y1="150" x2="40" y2="20" />
+                <line x1="40" y1="20" x2="110" y2="20" />
+                <line x1="110" y1="20" x2="110" y2="40" />
+                <circle id="p-cabeca" class="boneco-parte" cx="110" cy="52" r="12" />
+                <line id="p-corpo" class="boneco-parte" x1="110" y1="64" x2="110" y2="105" />
+                <line id="p-braco-esq" class="boneco-parte" x1="110" y1="75" x2="90" y2="92" />
+                <line id="p-braco-dir" class="boneco-parte" x1="110" y1="75" x2="130" y2="92" />
+                <line id="p-perna-esq" class="boneco-parte" x1="110" y1="105" x2="92" y2="132" />
+                <line id="p-perna-dir" class="boneco-parte" x1="110" y1="105" x2="128" y2="132" />
+            </svg>
         </div>
         
-        <!-- Espaço da palavra secreta -->
         <div id="palavra-container">_ _ _ _ _</div>
 
-        <!-- Mensagem de Vitória ou Derrota -->
         <div id="mensagem-fim"></div>
 
-        <!-- Teclado Virtual dinâmico -->
+        <div id="letras-usadas-container">
+            Letras digitadas: <span id="letras-usadas">Nenhuma</span>
+        </div>
+
         <div id="teclado"></div>
 
-        <!-- Botão de Reiniciar -->
         <button id="reiniciar" style="display:none;" onclick="reiniciarJogo()">Jogar Novamente</button>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        const API_URL = 'http://localhost:5500/api';
+        const PALAVRAS_LOCAL = ["JAVASCRIPT", "PROGRAMACAO", "NODEJS", "GITHUB", "COMPUTADOR", "DESENVOLVEDOR"];
+        let jogoLocal = { palavra: "", tentadas: [], erros: 0, maxErros: 6 };
+
+        const partesBoneco = [
+            'p-cabeca', 'p-corpo', 'p-braco-esq', 
+            'p-braco-dir', 'p-perna-esq', 'p-perna-dir'
+        ];
+
+        function gerarTeclado() {
+            const teclado = document.getElementById('teclado');
+            teclado.innerHTML = '';
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letra => {
+                const btn = document.createElement('button');
+                btn.innerText = letra;
+                btn.id = `btn-${letra}`;
+                btn.onclick = () => tentarLetra(letra);
+                teclado.appendChild(btn);
+            });
+        }
+
+        async function atualizarEstado() {
+            try {
+                const res = await fetch(`${API_URL}/estado`);
+                const dados = await res.json();
+                renderizarInterface(dados.palavra.join(' '), dados.erros, dados.max_erros, dados.letras_tentadas, dados.venceu, dados.perdeu);
+            } catch {
+                const palavraExibida = jogoLocal.palavra.split('').map(l => jogoLocal.tentadas.includes(l) ? l : '_').join(' ');
+                const venceu = jogoLocal.palavra.length > 0 && jogoLocal.palavra.split('').every(l => jogoLocal.tentadas.includes(l));
+                const perdeu = jogoLocal.erros >= jogoLocal.maxErros;
+                renderizarInterface(palavraExibida, jogoLocal.erros, jogoLocal.maxErros, jogoLocal.tentadas, venceu, perdeu);
+            }
+        }
+
+        function renderizarInterface(palavra, erros, maxErros, tentadas, venceu, perdeu) {
+            document.getElementById('palavra-container').innerText = palavra;
+            document.getElementById('erros').innerText = erros;
+            document.getElementById('max-erros').innerText = maxErros;
+            document.getElementById('letras-usadas').innerText = tentadas.length ? tentadas.join(' - ') : 'Nenhuma';
+
+            partesBoneco.forEach((id, index) => {
+                document.getElementById(id).style.display = index < erros ? 'block' : 'none';
+            });
+
+            tentadas.forEach(letra => {
+                const btn = document.getElementById(`btn-${letra}`);
+                if (btn) btn.disabled = true;
+            });
+
+            const msg = document.getElementById('mensagem-fim');
+            if (venceu) {
+                msg.innerText = 'Parabéns! Você venceu!';
+                finalizar();
+            } else if (perdeu) {
+                msg.innerText = `Fim de jogo! A palavra era: ${jogoLocal.palavra}`;
+                finalizar();
+            }
+        }
+
+        async function tentarLetra(letra) {
+            try {
+                const res = await fetch(`${API_URL}/tentar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ letra })
+                });
+                if (res.ok) await atualizarEstado();
+            } catch {
+                if (!jogoLocal.tentadas.includes(letra)) {
+                    jogoLocal.tentadas.push(letra);
+                    if (!jogoLocal.palavra.includes(letra)) jogoLocal.erros++;
+                    atualizarEstado();
+                }
+            }
+        }
+
+        function finalizar() {
+            document.querySelectorAll('#teclado button').forEach(b => b.disabled = true);
+            document.getElementById('reiniciar').style.display = 'inline-block';
+        }
+
+        async function reiniciarJogo() {
+            try {
+                await fetch(`${API_URL}/reiniciar`, { method: 'POST' });
+            } catch {
+                const p = PALAVRAS_LOCAL[Math.floor(Math.random() * PALAVRAS_LOCAL.length)];
+                jogoLocal = { palavra: p, tentadas: [], erros: 0, maxErros: 6 };
+            }
+            document.getElementById('mensagem-fim').innerText = '';
+            document.getElementById('reiniciar').style.display = 'none';
+            gerarTeclado();
+            await atualizarEstado();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.altKey || e.metaKey) return;
+            const letra = e.key.toUpperCase();
+            if (letra.length === 1 && letra >= 'A' && letra <= 'Z') {
+                const btn = document.getElementById(`btn-${letra}`);
+                if (btn && !btn.disabled) tentarLetra(letra);
+            }
+        });
+
+        window.onload = () => {
+            const p = PALAVRAS_LOCAL[Math.floor(Math.random() * PALAVRAS_LOCAL.length)];
+            jogoLocal = { palavra: p, tentadas: [], erros: 0, maxErros: 6 };
+            gerarTeclado();
+            atualizarEstado();
+        };
+    </script>
 </body>
 </html>
